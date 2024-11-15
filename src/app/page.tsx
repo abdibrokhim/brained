@@ -868,7 +868,7 @@ export default function Home() {
   const DefaultView = () => {
     return (
       <div className="flex flex-col items-center justify-center block">
-        <div className="flex flex-row flex-wrap gap-0 items-center justify-center z-10">
+        <div className="flex flex-row flex-wrap gap-8 items-center justify-center z-10">
             {defaultViewObservations.map((obs, index) => (
               <div key={obs.id+'_'+index} className="flex flex-col justify-between gap-2">
                 {/* show frist image */}
@@ -914,151 +914,202 @@ export default function Home() {
   // show expanded observation
   const ExpandedObservationView = () => {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-30">
-      <div className="w-[90%] bg-[#2e2e2e] rounded-md">
-        {/* header */}
-        <div className="flex flex-row justify-between border-b border-[#a1a1aa] p-4">
-          <p className="text-md">Observation details</p>
-          <button
-            onClick={() => setShowExpandedObservation(!showExpandedObservation)}
-            className={`flex items-center justify-center w-[24px] h-[24px] rounded-full shadow cursor-pointer hover:bg-[#151515] p-2`}>
-              {isApprovingObservation || isDeletingObservation || isUpdatingReportUrl || isUploadingReport || generatingReport || isFetchingObservationById
-                ? <span className='flex justify-center items-center text-black'>{loader()}</span>
-                : <FontAwesomeIcon icon={faClose} />
-              }
-          </button>
-        </div>
-        <div className="flex flex-row p-4 gap-4 items-center justify-between">
-          {/* show images as slider*/}
-          <div className="w-1/2">
-            <ImageSlider images={oneObservation?.imageUrls!} />
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-40">
+        <div className="w-full max-w-4xl h-[700px] overflow-auto mx-4 bg-[#2e2e2e] rounded-md">
+          {/* Header */}
+          <div className="flex flex-row justify-between border-b border-[#a1a1aa] p-4">
+            <p className="text-md">Observation details</p>
+            <button
+              onClick={() => setShowExpandedObservation(!showExpandedObservation)}
+              className="flex items-center justify-center w-6 h-6 rounded-full shadow cursor-pointer hover:bg-[#151515] p-2"
+            >
+              {isApprovingObservation ||
+              isDeletingObservation ||
+              isUpdatingReportUrl ||
+              isUploadingReport ||
+              generatingReport ||
+              isFetchingObservationById ? (
+                <span className="flex justify-center items-center text-black">
+                  {loader()}
+                </span>
+              ) : (
+                <FontAwesomeIcon icon={faClose} />
+              )}
+            </button>
           </div>
-          <div className="w-1/2">
-            {/* show conclusion */}
-            <div className="">
-                <p className="text-md">Conclusion</p>
-                {!isFetchingObservationById
-                    ? 
-                <textarea
-                  disabled={true}
-                  value={oneObservation?.conclusionText || ''}
-                  autoComplete="off"
-                  id="conclusion1"
-                  className="mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-white bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white resize-none"
-                  rows={4} // Specify the number of rows (height) of the textarea
-                />
-                : <span className='flex justify-center items-center text-white mt-2'>{loader()}</span>}
+          {/* Main Content */}
+          <div className="flex flex-col md:flex-row p-4 gap-4">
+            {/* Image Slider */}
+            <div className="w-full md:w-1/2">
+              <ImageSlider images={oneObservation?.imageUrls!} />
             </div>
-            {/* show observation details */}
-            <div className="mt-[40px] flex flex-col gap-6 justify-between items-start">
-              <div className="w-full">
-                <p className="text-md">Quick info</p>
-                <div className="mt-2 flex flex-row gap-2 items-center justify-center">
-                  <div className="flex flex-col gap-1 items-start justify-start w-1/2">
-                    <p className="text-xs text-[#a1a1aa] block font-bold">Radiologist</p>
-                    {!isFetchingObservationById
-                    ? 
-                    <input
-                      disabled={true}
-                      value={oneObservation?.radiologistName || ''}
-                      autoComplete="off"
-                        type="text"
-                        id="radiologistName1"
-                        placeholder="Enter radiologist name"
-                        className="w-2/3 mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-white text-sm bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
-                      />
-                      : <span className='flex justify-center items-center text-white mt-2'>{loader()}</span>}
-                  </div>
-                  <div className="flex flex-col gap-1 items-start justify-start w-1/2">
-                    <p className="text-xs text-[#a1a1aa] block font-bold">Head Doctor:</p>
-                    {!isFetchingObservationById
-                    ? 
-                    <input
-                      value={oneObservation?.headDoctorName || headDoctorName}
-                      onChange={handleHeadDoctorNameChange}
-                      autoComplete="off"
-                        type="text"
-                        id="headDoctorName1"
-                        placeholder="Enter head doctor name"
-                        className="w-2/3 mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-white text-sm bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
-                      />
-                      : <span className='flex justify-center items-center text-white mt-2'>{loader()}</span>}
-                    </div>
-                </div>
+            {/* Right Column */}
+            <div className="w-full md:w-1/2">
+              {/* Conclusion */}
+              <div>
+                <p className="text-md">Conclusion</p>
+                {!isFetchingObservationById ? (
+                  <textarea
+                    disabled
+                    value={oneObservation?.conclusionText || ''}
+                    autoComplete="off"
+                    id="conclusion1"
+                    className="mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-white bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white resize-none"
+                    rows={4}
+                  />
+                ) : (
+                  <span className="flex justify-center items-center text-white mt-2">
+                    {loader()}
+                  </span>
+                )}
               </div>
-              {/* show user details */}
-              <div className="w-full">
-                <p className="text-md">Patient info</p>
-                <div className="mt-2 w-full flex flex-row gap-2 items-center justify-center">
-                <div className="flex flex-col gap-1 items-start justify-start w-3/6">
-                  <p className="text-xs text-[#a1a1aa] block font-bold">Full Name:</p>
-                  {!isFetchingObservationById
-                    ? 
-                    <input
-                        disabled={true}
-                        value={oneObservation?.patientDetails.name || ''}
-                        autoComplete="off"
+              {/* Observation Details */}
+              <div className="mt-8 flex flex-col gap-6">
+                {/* Quick Info */}
+                <div className="w-full">
+                  <p className="text-md">Quick info</p>
+                  <div className="mt-2 flex flex-col md:flex-row gap-2">
+                    <div className="flex flex-col gap-1 w-full md:w-1/2">
+                      <p className="text-xs text-[#a1a1aa] font-bold">Radiologist</p>
+                      {!isFetchingObservationById ? (
+                        <input
+                          disabled
+                          value={oneObservation?.radiologistName || ''}
+                          autoComplete="off"
+                          type="text"
+                          id="radiologistName1"
+                          placeholder="Enter radiologist name"
+                          className="mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-white text-sm bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
+                        />
+                      ) : (
+                        <span className="flex justify-center items-center text-white mt-2">
+                          {loader()}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-1 w-full md:w-1/2">
+                      <p className="text-xs text-[#a1a1aa] font-bold">Head Doctor:</p>
+                      {!isFetchingObservationById ? (
+                        <input
+                          value={oneObservation?.headDoctorName || headDoctorName}
+                          onChange={handleHeadDoctorNameChange}
+                          autoComplete="off"
+                          type="text"
+                          id="headDoctorName1"
+                          placeholder="Enter head doctor name"
+                          className="mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-white text-sm bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
+                        />
+                      ) : (
+                        <span className="flex justify-center items-center text-white mt-2">
+                          {loader()}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                {/* Patient Info */}
+                <div className="w-full">
+                  <p className="text-md">Patient info</p>
+                  <div className="mt-2 flex flex-col md:flex-row gap-2">
+                    <div className="flex flex-col gap-1 w-full md:w-1/2">
+                      <p className="text-xs text-[#a1a1aa] font-bold">Full Name:</p>
+                      {!isFetchingObservationById ? (
+                        <input
+                          disabled
+                          value={oneObservation?.patientDetails.name || ''}
+                          autoComplete="off"
                           type="text"
                           id="fullName1"
                           placeholder="Enter your Patient ID"
-                          className="w-2/3 mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-sm text-white bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
+                          className="mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-sm text-white bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
                         />
-                  : <span className='flex justify-center items-center text-white mt-2'>{loader()}</span>
-                }
-                  </div>
-                  <div className="flex flex-col gap-1 items-start justify-start w-1/6">
-                  <p className="text-xs text-[#a1a1aa] block font-bold">Birth Year:</p>
-                  {!isFetchingObservationById
-                    ? 
-                  <input
-                    disabled={true}
-                    value={oneObservation?.patientDetails.birthYear || ''}
-                    autoComplete="off"
-                      type="text"
-                      id="birthYear1"
-                      placeholder="Enter your Patient ID"
-                      className="w-2/3 mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-sm text-white bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
-                    />
-                  : <span className='flex justify-center items-center text-white mt-2'>{loader()}</span>
-                }
-                  </div>
-                  <div className="flex flex-col gap-1 items-start justify-start w-2/6">
-                  <p className="text-xs text-[#a1a1aa] block font-bold">Phone Number:</p>
-                  {!isFetchingObservationById
-                    ? 
-                  <input
-                  disabled={true}
-                  value={oneObservation?.patientDetails.phoneNumber || ''}
-                  autoComplete="off"
-                  type="text"
-                  id="phoneNumber1"
-                  placeholder="Enter your Patient ID"
-                  className="w-2/3 mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-sm text-white bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
-                  />
-                  : <span className='flex justify-center items-center text-white mt-2'>{loader()}</span>
-                }
+                      ) : (
+                        <span className="flex justify-center items-center text-white mt-2">
+                          {loader()}
+                        </span>
+                      )}
                     </div>
+                    <div className="flex flex-col gap-1 w-full md:w-1/4">
+                      <p className="text-xs text-[#a1a1aa] font-bold">Birth Year:</p>
+                      {!isFetchingObservationById ? (
+                        <input
+                          disabled
+                          value={oneObservation?.patientDetails.birthYear || ''}
+                          autoComplete="off"
+                          type="text"
+                          id="birthYear1"
+                          placeholder="Enter your Patient ID"
+                          className="mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-sm text-white bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
+                        />
+                      ) : (
+                        <span className="flex justify-center items-center text-white mt-2">
+                          {loader()}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-1 w-full md:w-1/4">
+                      <p className="text-xs text-[#a1a1aa] font-bold">Phone Number:</p>
+                      {!isFetchingObservationById ? (
+                        <input
+                          disabled
+                          value={oneObservation?.patientDetails.phoneNumber || ''}
+                          autoComplete="off"
+                          type="text"
+                          id="phoneNumber1"
+                          placeholder="Enter your Patient ID"
+                          className="mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-sm text-white bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
+                        />
+                      ) : (
+                        <span className="flex justify-center items-center text-white mt-2">
+                          {loader()}
+                        </span>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-            {/* show action buttons */}
-            <div className="flex flex-row gap-4 mt-[60px]"> 
-              <button 
-                    disabled={isApprovingObservation || isDeletingObservation || isUpdatingReportUrl || isUploadingReport || generatingReport || isFetchingObservationById}
+              {/* Action Buttons */}
+              <div className="flex flex-col md:flex-row gap-4 mt-8">
+                <button
+                  disabled={
+                    isApprovingObservation ||
+                    isDeletingObservation ||
+                    isUpdatingReportUrl ||
+                    isUploadingReport ||
+                    generatingReport ||
+                    isFetchingObservationById
+                  }
                   onClick={() => {
                     handleDeleteObservation();
-                  }} 
-                  className={`bg-[#7f1d1d] text-black p-2 rounded-md w-full font-bold hover:bg-[#b91c1c]`}>
-                  {!isApprovingObservation || !isDeletingObservation || !isUpdatingReportUrl || !isUploadingReport || !generatingReport || !isFetchingObservationById
-                    ? <span className='flex justify-center items-center text-white'>Delete</span>
-                    : <span className='flex justify-center items-center text-white'>{loader()}</span>
-                  }
+                  }}
+                  className="bg-[#7f1d1d] text-black p-2 rounded-md w-full md:w-auto font-bold hover:bg-[#b91c1c]"
+                >
+                  {!isApprovingObservation &&
+                  !isDeletingObservation &&
+                  !isUpdatingReportUrl &&
+                  !isUploadingReport &&
+                  !generatingReport &&
+                  !isFetchingObservationById ? (
+                    <span className="flex justify-center items-center text-white">
+                      Delete
+                    </span>
+                  ) : (
+                    <span className="flex justify-center items-center text-white">
+                      {loader()}
+                    </span>
+                  )}
                 </button>
-              <button 
-                    disabled={isApprovingObservation || isDeletingObservation || oneObservation?.status === "approved" || isUpdatingReportUrl || isUploadingReport || generatingReport || isFetchingObservationById}
-                  onClick={ async () => {
-                    // await handleGenerateReport();
-
+                <button
+                  disabled={
+                    isApprovingObservation ||
+                    isDeletingObservation ||
+                    oneObservation?.status === 'approved' ||
+                    isUpdatingReportUrl ||
+                    isUploadingReport ||
+                    generatingReport ||
+                    isFetchingObservationById
+                  }
+                  onClick={async () => {
                     if (await handleApproveObservation()) {
                       const url = await handleGenerateReport();
                       if (url) {
@@ -1066,230 +1117,315 @@ export default function Home() {
                       }
                     }
                   }}
-                  className={`bg-[#134e4a] text-black p-2 rounded-md w-full font-bold hover:bg-[#0f766e] ${
-                    oneObservation?.status === "approved" ? 'cursor-not-allowed' : 'cursor-pointer'
-                  }`}>
-                  {!isApprovingObservation || !isDeletingObservation || !isUpdatingReportUrl || !isUploadingReport || !generatingReport || !isFetchingObservationById
-                    ? <span className='flex justify-center items-center text-white'>{oneObservation?.status === "approved" ? "Approved" : "Approve"}</span>
-                    : <span className='flex justify-center items-center text-white'>{loader()}</span>
-                  }
+                  className={`bg-[#134e4a] text-black p-2 rounded-md w-full md:w-auto font-bold hover:bg-[#0f766e] ${
+                    oneObservation?.status === 'approved'
+                      ? 'cursor-not-allowed'
+                      : 'cursor-pointer'
+                  }`}
+                >
+                  {!isApprovingObservation &&
+                  !isDeletingObservation &&
+                  !isUpdatingReportUrl &&
+                  !isUploadingReport &&
+                  !generatingReport &&
+                  !isFetchingObservationById ? (
+                    <span className="flex justify-center items-center text-white">
+                      {oneObservation?.status === 'approved' ? 'Approved' : 'Approve'}
+                    </span>
+                  ) : (
+                    <span className="flex justify-center items-center text-white">
+                      {loader()}
+                    </span>
+                  )}
                 </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
     );
   };
 
   // show expanded report view
   const ExpandedReportView = () => {
     const [selectTab, setSelectTab] = useState(0);
-
+  
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-30">
-      <div className="w-[90%] bg-[#2e2e2e] rounded-md">
-        {/* header */}
-        <div className="flex flex-row justify-between border-b border-[#a1a1aa] p-4">
-          <p className="text-md">Observation details | Report</p>
-          <button
-            onClick={() => setShowExpandedReportView(!showExpandedReportView)}
-            className={`flex items-center justify-center w-[24px] h-[24px] rounded-full shadow cursor-pointer hover:bg-[#151515] p-2`}>
-              {isApprovingObservation || isDeletingObservation || isUpdatingReportUrl || isUploadingReport || generatingReport || isFetchingObservationById
-                ? <span className='flex justify-center items-center text-black'>{loader()}</span>
-                : <FontAwesomeIcon icon={faClose} />
-              }
-          </button>
-        </div>
-        <div className="flex flex-row p-4 gap-4 items-center justify-between">
-          {/* show images as slider*/}
-          <div className="flex flex-col gap-2 items-center w-1/2">
-              <div className="flex flex-row gap-4 w-full px-10">
-                  <button 
-                    disabled={isFetchingObservationById}
-                    onClick={() => {
-                      setSelectTab(0);
-                    }} 
-                    className={`p-2 rounded-md w-full border border-[#aaaaaa] hover:underline cursor-pointer ${selectTab === 0 ? 'underline' : ''}`}>
-                    {!isFetchingObservationById 
-                      ? <span className='flex justify-center items-center text-white'><FontAwesomeIcon icon={faBrain} className="mr-2" />Show Scans</span>
-                      : <span className='flex justify-center items-center text-white'>{loader()}</span>
-                    }
-                  </button>
-                  <button 
-                    disabled={isFetchingObservationById}
-                    onClick={() => {
-                      setSelectTab(1);
-                    }} 
-                    className={`p-2 rounded-md w-full border border-[#aaaaaa] hover:underline cursor-pointer ${selectTab === 1 ? 'underline' : ''}`}>
-                    {!isFetchingObservationById 
-                      ? <span className='flex justify-center items-center text-white'><FontAwesomeIcon icon={faFile} className="mr-2" />Show Report</span>
-                      : <span className='flex justify-center items-center text-white'>{loader()}</span>
-                    }
-                  </button>
-                </div>
-            <div className="w-full mt-4">
-              {selectTab === 0 
-                ? (<ImageSlider images={oneObservation?.imageUrls!} />) 
-                : (<ReportViewerPDF reportPdf={oneObservation?.reportUrl!} />)
-              }
-            </div>
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-40">
+        <div className="w-full max-w-4xl h-[700px] overflow-auto mx-4 bg-[#2e2e2e] rounded-md">
+          {/* Header */}
+          <div className="flex flex-row justify-between border-b border-[#a1a1aa] p-4">
+            <p className="text-md">Observation details | Report</p>
+            <button
+              onClick={() => setShowExpandedReportView(!showExpandedReportView)}
+              className={`flex items-center justify-center w-6 h-6 rounded-full shadow cursor-pointer hover:bg-[#151515] p-2`}
+            >
+              {isApprovingObservation ||
+              isDeletingObservation ||
+              isUpdatingReportUrl ||
+              isUploadingReport ||
+              generatingReport ||
+              isFetchingObservationById ? (
+                <span className="flex justify-center items-center text-black">
+                  {loader()}
+                </span>
+              ) : (
+                <FontAwesomeIcon icon={faClose} />
+              )}
+            </button>
           </div>
-          <div className="w-1/2">
-            {/* show conclusion */}
-            <div className="">
-                <p className="text-md">Conclusion</p>
-                {!isFetchingObservationById
-                    ? 
-                <textarea
-                  disabled={true}
-                  value={oneObservation?.conclusionText || ''}
-                  autoComplete="off"
-                  id="conclusion1"
-                  className="mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-white bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white resize-none"
-                  rows={4} // Specify the number of rows (height) of the textarea
-                />
-                : <span className='flex justify-center items-center text-white mt-2'>{loader()}</span>}
-            </div>
-            {/* show observation details */}
-            <div className="mt-[40px] flex flex-col gap-6 justify-between items-start">
-              <div className="w-full">
-                <p className="text-md">Quick info</p>
-                <div className="mt-2 flex flex-row gap-2 items-center justify-center">
-                  <div className="flex flex-col gap-1 items-start justify-start w-1/2">
-                    <p className="text-xs text-[#a1a1aa] block font-bold">Radiologist</p>
-                    {!isFetchingObservationById
-                    ? 
-                    <input
-                      disabled={true}
-                      value={oneObservation?.radiologistName || ''}
-                      autoComplete="off"
-                        type="text"
-                        id="radiologistName1"
-                        className="w-2/3 mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-white text-sm bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
-                      />
-                      : <span className='flex justify-center items-center text-white mt-2'>{loader()}</span>}
-                  </div>
-                  <div className="flex flex-col gap-1 items-start justify-start w-1/2">
-                    <p className="text-xs text-[#a1a1aa] block font-bold">Head Doctor:</p>
-                    {!isFetchingObservationById
-                    ? 
-                    <input
-                      disabled={true}
-                      value={oneObservation?.headDoctorName || headDoctorName}
-                      autoComplete="off"
-                        type="text"
-                        id="headDoctorName1"
-                        className="w-2/3 mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-white text-sm bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
-                      />
-                      : <span className='flex justify-center items-center text-white mt-2'>{loader()}</span>}
-                    </div>
-                </div>
+          {/* Main Content */}
+          <div className="flex flex-col md:flex-row p-4 gap-4">
+            {/* Left Column */}
+            <div className="flex flex-col gap-2 items-center w-full md:w-1/2">
+              <div className="flex flex-row gap-4 w-full px-2 md:px-10">
+                <button
+                  disabled={isFetchingObservationById}
+                  onClick={() => {
+                    setSelectTab(0);
+                  }}
+                  className={`p-2 rounded-md w-full border border-[#aaaaaa] hover:underline cursor-pointer ${
+                    selectTab === 0 ? 'underline' : ''
+                  }`}
+                >
+                  {!isFetchingObservationById ? (
+                    <span className="flex justify-center items-center text-white">
+                      <FontAwesomeIcon icon={faBrain} className="mr-2" />
+                      Show Scans
+                    </span>
+                  ) : (
+                    <span className="flex justify-center items-center text-white">
+                      {loader()}
+                    </span>
+                  )}
+                </button>
+                <button
+                  disabled={isFetchingObservationById}
+                  onClick={() => {
+                    setSelectTab(1);
+                  }}
+                  className={`p-2 rounded-md w-full border border-[#aaaaaa] hover:underline cursor-pointer ${
+                    selectTab === 1 ? 'underline' : ''
+                  }`}
+                >
+                  {!isFetchingObservationById ? (
+                    <span className="flex justify-center items-center text-white">
+                      <FontAwesomeIcon icon={faFile} className="mr-2" />
+                      Show Report
+                    </span>
+                  ) : (
+                    <span className="flex justify-center items-center text-white">
+                      {loader()}
+                    </span>
+                  )}
+                </button>
               </div>
-              {/* show user details */}
-              <div className="w-full">
-                <p className="text-md">Patient info</p>
-                <div className="mt-2 w-full flex flex-row gap-2 items-center justify-center">
-                <div className="flex flex-col gap-1 items-start justify-start w-3/6">
-                  <p className="text-xs text-[#a1a1aa] block font-bold">Full Name:</p>
-                  {!isFetchingObservationById
-                    ? 
-                    <input
-                        disabled={true}
-                        value={oneObservation?.patientDetails.name || ''}
-                        autoComplete="off"
+              <div className="w-full mt-4">
+                {selectTab === 0 ? (
+                  <ImageSlider images={oneObservation?.imageUrls!} />
+                ) : (
+                  <ReportViewerPDF reportPdf={oneObservation?.reportUrl!} />
+                )}
+              </div>
+            </div>
+            {/* Right Column */}
+            <div className="w-full md:w-1/2">
+              {/* Conclusion */}
+              <div>
+                <p className="text-md">Conclusion</p>
+                {!isFetchingObservationById ? (
+                  <textarea
+                    disabled
+                    value={oneObservation?.conclusionText || ''}
+                    autoComplete="off"
+                    id="conclusion1"
+                    className="mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-white bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white resize-none"
+                    rows={4}
+                  />
+                ) : (
+                  <span className="flex justify-center items-center text-white mt-2">
+                    {loader()}
+                  </span>
+                )}
+              </div>
+              {/* Observation Details */}
+              <div className="mt-8 flex flex-col gap-6">
+                <div className="w-full">
+                  <p className="text-md">Quick info</p>
+                  <div className="mt-2 flex flex-col md:flex-row gap-2 items-center">
+                    <div className="flex flex-col gap-1 items-start justify-start w-full md:w-1/2">
+                      <p className="text-xs text-[#a1a1aa] block font-bold">Radiologist</p>
+                      {!isFetchingObservationById ? (
+                        <input
+                          disabled
+                          value={oneObservation?.radiologistName || ''}
+                          autoComplete="off"
+                          type="text"
+                          id="radiologistName1"
+                          className="mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-white text-sm bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
+                        />
+                      ) : (
+                        <span className="flex justify-center items-center text-white mt-2">
+                          {loader()}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-1 items-start justify-start w-full md:w-1/2">
+                      <p className="text-xs text-[#a1a1aa] block font-bold">Head Doctor:</p>
+                      {!isFetchingObservationById ? (
+                        <input
+                          disabled
+                          value={oneObservation?.headDoctorName || headDoctorName}
+                          autoComplete="off"
+                          type="text"
+                          id="headDoctorName1"
+                          className="mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-white text-sm bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
+                        />
+                      ) : (
+                        <span className="flex justify-center items-center text-white mt-2">
+                          {loader()}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                {/* Patient Info */}
+                <div className="w-full">
+                  <p className="text-md">Patient info</p>
+                  <div className="mt-2 flex flex-col md:flex-row gap-2 items-center">
+                    <div className="flex flex-col gap-1 items-start justify-start w-full md:w-1/2">
+                      <p className="text-xs text-[#a1a1aa] block font-bold">Full Name:</p>
+                      {!isFetchingObservationById ? (
+                        <input
+                          disabled
+                          value={oneObservation?.patientDetails.name || ''}
+                          autoComplete="off"
                           type="text"
                           id="fullName1"
-                          className="w-2/3 mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-sm text-white bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
+                          className="mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-sm text-white bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
                         />
-                  : <span className='flex justify-center items-center text-white mt-2'>{loader()}</span>
-                }
-                  </div>
-                  <div className="flex flex-col gap-1 items-start justify-start w-1/6">
-                  <p className="text-xs text-[#a1a1aa] block font-bold">Birth Year:</p>
-                  {!isFetchingObservationById
-                    ? 
-                  <input
-                    disabled={true}
-                    value={oneObservation?.patientDetails.birthYear || ''}
-                    autoComplete="off"
-                      type="text"
-                      id="birthYear1"
-                      className="w-2/3 mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-sm text-white bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
-                    />
-                  : <span className='flex justify-center items-center text-white mt-2'>{loader()}</span>
-                }
-                  </div>
-                  <div className="flex flex-col gap-1 items-start justify-start w-2/6">
-                  <p className="text-xs text-[#a1a1aa] block font-bold">Phone Number:</p>
-                  {!isFetchingObservationById
-                    ? 
-                  <input
-                  disabled={true}
-                  value={oneObservation?.patientDetails.phoneNumber || ''}
-                  autoComplete="off"
-                  type="text"
-                  id="phoneNumber1"
-                  className="w-2/3 mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-sm text-white bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
-                  />
-                  : <span className='flex justify-center items-center text-white mt-2'>{loader()}</span>
-                }
+                      ) : (
+                        <span className="flex justify-center items-center text-white mt-2">
+                          {loader()}
+                        </span>
+                      )}
                     </div>
-                </div>
+                    <div className="flex flex-col gap-1 items-start justify-start w-full md:w-1/4">
+                      <p className="text-xs text-[#a1a1aa] block font-bold">Birth Year:</p>
+                      {!isFetchingObservationById ? (
+                        <input
+                          disabled
+                          value={oneObservation?.patientDetails.birthYear || ''}
+                          autoComplete="off"
+                          type="text"
+                          id="birthYear1"
+                          className="mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-sm text-white bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
+                        />
+                      ) : (
+                        <span className="flex justify-center items-center text-white mt-2">
+                          {loader()}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-1 items-start justify-start w-full md:w-1/4">
+                      <p className="text-xs text-[#a1a1aa] block font-bold">Phone Number:</p>
+                      {!isFetchingObservationById ? (
+                        <input
+                          disabled
+                          value={oneObservation?.patientDetails.phoneNumber || ''}
+                          autoComplete="off"
+                          type="text"
+                          id="phoneNumber1"
+                          className="mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-sm text-white bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
+                        />
+                      ) : (
+                        <span className="flex justify-center items-center text-white mt-2">
+                          {loader()}
+                        </span>
+                      )}
+                    </div>
+                  </div>
                   <div className="mt-4 flex flex-row gap-1 items-center justify-start">
-                  <p className="text-xs text-[#a1a1aa] block font-bold">Status:</p>
-                  {!isFetchingObservationById
-                    ? 
-                    <button 
-                    disabled={true}
-                    className={`bg-[#064e3b] text-black p-1 rounded-full w-[100px] text-xs`}>
-                      <span className='flex justify-center items-center text-white text-xs'><FontAwesomeIcon icon={faCircleCheck} className="mr-2" />Approved</span>
-                  </button>
-                  : <span className='flex justify-center items-center text-white mt-2'>{loader()}</span>
-                }
-                    </div>
+                    <p className="text-xs text-[#a1a1aa] block font-bold">Status:</p>
+                    {!isFetchingObservationById ? (
+                      <button
+                        disabled
+                        className={`bg-[#064e3b] text-black p-1 rounded-full w-[100px] text-xs`}
+                      >
+                        <span className="flex justify-center items-center text-white text-xs">
+                          <FontAwesomeIcon icon={faCircleCheck} className="mr-2" />
+                          Approved
+                        </span>
+                      </button>
+                    ) : (
+                      <span className="flex justify-center items-center text-white mt-2">
+                        {loader()}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+              {/* Action Buttons */}
+              <div className="flex flex-col md:flex-row gap-4 mt-8">
+                <button
+                  disabled={isFetchingObservationById}
+                  onClick={() => {
+                    handleDeleteObservation();
+                  }}
+                  className={`bg-[#7f1d1d] text-black p-2 rounded-md w-full md:w-auto font-bold hover:bg-[#b91c1c]`}
+                >
+                  {!isFetchingObservationById ? (
+                    <span className="flex justify-center items-center text-white">
+                      <FontAwesomeIcon icon={faTrash} className="mr-2" />
+                      Delete
+                    </span>
+                  ) : (
+                    <span className="flex justify-center items-center text-white">
+                      {loader()}
+                    </span>
+                  )}
+                </button>
+                <button
+                  disabled={isFetchingObservationById}
+                  onClick={() => {
+                    window.open(oneObservation!.reportUrl, '_blank');
+                  }}
+                  className={`bg-[#a1a1aa] text-black p-2 rounded-md w-full md:w-auto font-bold hover:bg-[#f4f4f5]`}
+                >
+                  {!isFetchingObservationById ? (
+                    <span className="flex justify-center items-center text-black">
+                      <FontAwesomeIcon icon={faPrint} className="mr-2" />
+                      Print
+                    </span>
+                  ) : (
+                    <span className="flex justify-center items-center text-black">
+                      {loader()}
+                    </span>
+                  )}
+                </button>
+                <button
+                  disabled={isFetchingObservationById}
+                  onClick={() => {
+                    shareReport();
+                  }}
+                  className={`bg-[#134e4a] text-black p-2 rounded-md w-full md:w-auto font-bold hover:bg-[#0f766e]`}
+                >
+                  {!isFetchingObservationById ? (
+                    <span className="flex justify-center items-center text-white">
+                      <FontAwesomeIcon icon={faShare} className="mr-2" />
+                      Share
+                    </span>
+                  ) : (
+                    <span className="flex justify-center items-center text-white">
+                      {loader()}
+                    </span>
+                  )}
+                </button>
               </div>
             </div>
-            {/* show action buttons */}
-            <div className="flex flex-row gap-4 mt-[60px]">
-                  <button 
-                    disabled={isFetchingObservationById}
-                    onClick={() => {
-                      handleDeleteObservation();
-                    }} 
-                    className={`bg-[#7f1d1d] text-black p-2 rounded-md w-full font-bold hover:bg-[#b91c1c]`}>
-                    {!isFetchingObservationById 
-                      ? <span className='flex justify-center items-center text-white'><FontAwesomeIcon icon={faTrash} className="mr-2" />Delete</span>
-                      : <span className='flex justify-center items-center text-white'>{loader()}</span>
-                    }
-                  </button>
-                  <button 
-                    disabled={isFetchingObservationById}
-                    onClick={() => {
-                      window.open(oneObservation!.reportUrl, '_blank');
-                    }} 
-                    className={`bg-[#a1a1aa] text-black p-2 rounded-md w-full font-bold hover:bg-[#f4f4f5]`}>
-                    {!isFetchingObservationById 
-                      ? <span className='flex justify-center items-center text-black'><FontAwesomeIcon icon={faPrint} className="mr-2" />Print</span>
-                      : <span className='flex justify-center items-center text-black'>{loader()}</span>
-                    }
-                  </button>
-                  <button 
-                    disabled={isFetchingObservationById}
-                    onClick={() => {
-                      shareReport();
-                    }} 
-                    className={`bg-[#134e4a] text-black p-2 rounded-md w-full font-bold hover:bg-[#0f766e]`}>
-                    {!isFetchingObservationById 
-                      ? <span className='flex justify-center items-center text-white'><FontAwesomeIcon icon={faShare} className="mr-2" />Share</span>
-                      : <span className='flex justify-center items-center text-white'>{loader()}</span>
-                    }
-                  </button>
-                </div>
           </div>
         </div>
       </div>
-    </div>
     );
   };
 
@@ -1476,151 +1612,198 @@ export default function Home() {
   };
 
   // show expanded conclusion
-  const ExpandedConclusionView = () => {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-30">
-      <div className="w-[90%] bg-[#2e2e2e] rounded-md">
-        {/* header */}
+  // show expanded conclusion
+const ExpandedConclusionView = () => {
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-40">
+      <div className="w-full max-w-4xl h-[700px] overflow-auto mx-4 bg-[#2e2e2e] rounded-md">
+        {/* Header */}
         <div className="flex flex-row justify-between border-b border-[#a1a1aa] p-4">
           <p className="text-md">Generated conclusion</p>
           <button
             onClick={() => setShowExpandedConclusion(!showExpandedConclusion)}
-            className={`flex items-center justify-center w-[24px] h-[24px] rounded-full shadow cursor-pointer hover:bg-[#151515] p-2`}>
-              {isAddingScanAndPatient || isRegeneratingConclusion || isDeletingObservation || isSavingObservation || isSegmentingScans
-                ? <span className='flex justify-center items-center text-white'>{loader()}</span>
-                : <FontAwesomeIcon icon={faClose} />
-              }
+            className="flex items-center justify-center w-6 h-6 rounded-full shadow cursor-pointer hover:bg-[#151515] p-2"
+          >
+            {isAddingScanAndPatient ||
+            isRegeneratingConclusion ||
+            isDeletingObservation ||
+            isSavingObservation ||
+            isSegmentingScans ? (
+              <span className="flex justify-center items-center text-white">
+                {loader()}
+              </span>
+            ) : (
+              <FontAwesomeIcon icon={faClose} />
+            )}
           </button>
         </div>
-        <div className="flex flex-row p-4 gap-4 items-center justify-between">
-          {/* show images as slider*/}
-          <div className="w-1/2">
+        {/* Main Content */}
+        <div className="flex flex-col md:flex-row p-4 gap-4">
+          {/* Image Slider */}
+          <div className="w-full md:w-1/2">
             <ImageSlider images={scanUrls} />
           </div>
-          <div className="w-1/2">
-            {/* show conclusion */}
-            <div className="">
-                <p className="text-md">Conclusion</p>
-                {(isGeneratingConclusion || isSegmentingScans || isRegeneratingConclusion)
-                  ? loader() 
-                  : (
-                    <textarea
-                      value={conclusion}
-                      onChange={(e) => setConclusion(e.target.value)} // Append the last typed character
-                      autoComplete="off"
-                      id="conclusion"
-                      className="mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-white bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white resize-none"
-                      rows={4} // Specify the number of rows (height) of the textarea
-                    />
-                  )
-                }
+          {/* Right Column */}
+          <div className="w-full md:w-1/2">
+            {/* Conclusion */}
+            <div>
+              <p className="text-md">Conclusion</p>
+              {isGeneratingConclusion || isSegmentingScans || isRegeneratingConclusion ? (
+                loader()
+              ) : (
+                <textarea
+                  value={conclusion}
+                  onChange={(e) => setConclusion(e.target.value)}
+                  autoComplete="off"
+                  id="conclusion"
+                  className="mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-white bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white resize-none"
+                  rows={4}
+                />
+              )}
             </div>
-            {/* show observation details */}
-            <div className="mt-[40px] flex flex-col gap-6 justify-between items-start">
+            {/* Observation Details */}
+            <div className="mt-8 flex flex-col gap-6">
+              {/* Quick Info */}
               <div className="w-full">
-                <p className="text-md">Quick info <span className="text-[#a1a1aa] text-xs">(fill it out)</span></p>
-                <div className="mt-2 flex flex-row gap-2 items-start justify-start">
-                  <div className="flex flex-col gap-1 items-start justify-start w-1/2">
-                    <p className="text-xs text-[#a1a1aa] block font-bold">Radiologist <span className="text-red-500">*</span></p>
+                <p className="text-md">
+                  Quick info <span className="text-[#a1a1aa] text-xs">(fill it out)</span>
+                </p>
+                <div className="mt-2 flex flex-col md:flex-row gap-2 items-start">
+                  <div className="flex flex-col gap-1 w-full">
+                    <p className="text-xs text-[#a1a1aa] font-bold">
+                      Radiologist <span className="text-red-500">*</span>
+                    </p>
                     <input
                       value={radiologistName}
                       onChange={(e) => setRadiologistName(e.target.value)}
                       autoComplete="off"
-                        type="text"
-                        id="radiologistName"
-                        placeholder="Enter radiologist name"
-                        className="w-2/3 mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-white text-sm bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
-                      />
+                      type="text"
+                      id="radiologistName"
+                      placeholder="Enter radiologist name"
+                      className="mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-white text-sm bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
+                    />
                   </div>
                 </div>
               </div>
-              {/* show user details */}
+              {/* Patient Info */}
               <div className="w-full">
                 <p className="text-md">Patient info</p>
-                <div className="mt-2 w-full flex flex-row gap-2 items-center justify-center">
-                <div className="flex flex-col gap-1 items-start justify-start w-3/6">
-                  <p className="text-xs text-[#a1a1aa] block font-bold">Full Name:</p>
-                  <input
-                      disabled={true}
+                <div className="mt-2 w-full flex flex-col md:flex-row gap-2 items-start">
+                  <div className="flex flex-col gap-1 w-full md:w-1/2">
+                    <p className="text-xs text-[#a1a1aa] font-bold">Full Name:</p>
+                    <input
+                      disabled
                       value={patientName}
                       autoComplete="off"
-                        type="text"
-                        id="fullName"
-                        placeholder="Enter your Patient ID"
-                        className="w-2/3 mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-sm text-white bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
-                      />
+                      type="text"
+                      id="fullName"
+                      placeholder="Enter your Patient ID"
+                      className="mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-sm text-white bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
+                    />
                   </div>
-                  <div className="flex flex-col gap-1 items-start justify-start w-1/6">
-                  <p className="text-xs text-[#a1a1aa] block font-bold">Birth Year:</p>
-                  <input
-                    disabled={true}
-                    value={patientBirthYear}
-                    autoComplete="off"
+                  <div className="flex flex-col gap-1 w-full md:w-1/4">
+                    <p className="text-xs text-[#a1a1aa] font-bold">Birth Year:</p>
+                    <input
+                      disabled
+                      value={patientBirthYear}
+                      autoComplete="off"
                       type="text"
                       id="birthYear"
                       placeholder="Enter your Patient ID"
-                      className="w-2/3 mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-sm text-white bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
+                      className="mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-sm text-white bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
                     />
                   </div>
-                  <div className="flex flex-col gap-1 items-start justify-start w-2/6">
-                  <p className="text-xs text-[#a1a1aa] block font-bold">Phone Number:</p>
-                  <input
-                    disabled={true}
-                    value={patientPhoneNumber}
-                    autoComplete="off"
+                  <div className="flex flex-col gap-1 w-full md:w-1/4">
+                    <p className="text-xs text-[#a1a1aa] font-bold">Phone Number:</p>
+                    <input
+                      disabled
+                      value={patientPhoneNumber}
+                      autoComplete="off"
                       type="text"
                       id="phoneNumber"
                       placeholder="Enter your Patient ID"
-                      className="w-2/3 mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-sm text-white bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
+                      className="mt-2 placeholder:text-[#aaaaaa] placeholder:text-sm w-full px-4 py-3 text-sm text-white bg-transparent rounded border border-[#a1a1aa] focus:outline-none focus:border-white"
                     />
-                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-            {/* show action buttons */}
-            <div className="flex flex-row gap-4 mt-[60px]"> 
-              <button 
-                    disabled={isRegeneratingConclusion || isDeletingObservation || isSavingObservation || isSegmentingScans}
-                  onClick={() => {
-                    handleDeleteObservation();
-                  }} 
-                  className={`bg-[#7f1d1d] text-black p-2 rounded-md w-full font-bold hover:bg-[#b91c1c]`}>
-                  {(!isRegeneratingConclusion || !isDeletingObservation || !isSavingObservation || !isSegmentingScans)
-                    ? <span className='flex justify-center items-center text-white'>Delete</span>
-                    : <span className='flex justify-center items-center text-white'>{loader()}</span>
-                  }
-                </button>
-              <button 
-                    disabled={isRegeneratingConclusion || isDeletingObservation || isSavingObservation || isSegmentingScans}
-                  onClick={() => {
-                    handleRegenerateConclusion();
-                  }} 
-                  className={`bg-[#0c4a6e] text-black p-2 rounded-md w-full font-bold hover:bg-[#0369a1]`}>
-                  {(!isRegeneratingConclusion || !isDeletingObservation || !isSavingObservation || !isSegmentingScans)
-                    ? <span className='flex justify-center items-center text-white'>Regenerate</span>
-                    : <span className='flex justify-center items-center text-white'>{loader()}</span>
-                  }
-                </button>
-              <button 
-                    disabled={isRegeneratingConclusion || isDeletingObservation || radiologistName.trim() === '' || isSavingObservation || isSegmentingScans}
-                  onClick={() => {
-                    handleSaveObservation();
-                  }} 
-                  className={`bg-[#134e4a] text-black p-2 rounded-md w-full font-bold hover:bg-[#0f766e] ${
-                    radiologistName.trim() === '' ? 'cursor-not-allowed' : 'cursor-pointer'
-                  }`}>
-                  {(!isRegeneratingConclusion || !isDeletingObservation || !isSavingObservation || !isSegmentingScans)
-                    ? <span className='flex justify-center items-center text-white'>Save</span>
-                    : <span className='flex justify-center items-center text-white'>{loader()}</span>
-                  }
-                </button>
+            {/* Action Buttons */}
+            <div className="flex flex-col md:flex-row gap-4 mt-8">
+              <button
+                disabled={
+                  isRegeneratingConclusion ||
+                  isDeletingObservation ||
+                  isSavingObservation ||
+                  isSegmentingScans
+                }
+                onClick={() => {
+                  handleDeleteObservation();
+                }}
+                className="bg-[#7f1d1d] text-black p-2 rounded-md w-full md:w-auto font-bold hover:bg-[#b91c1c]"
+              >
+                {!isRegeneratingConclusion &&
+                !isDeletingObservation &&
+                !isSavingObservation &&
+                !isSegmentingScans ? (
+                  <span className="flex justify-center items-center text-white">Delete</span>
+                ) : (
+                  <span className="flex justify-center items-center text-white">{loader()}</span>
+                )}
+              </button>
+              <button
+                disabled={
+                  isRegeneratingConclusion ||
+                  isDeletingObservation ||
+                  isSavingObservation ||
+                  isSegmentingScans
+                }
+                onClick={() => {
+                  handleRegenerateConclusion();
+                }}
+                className="bg-[#0c4a6e] text-black p-2 rounded-md w-full md:w-auto font-bold hover:bg-[#0369a1]"
+              >
+                {!isRegeneratingConclusion &&
+                !isDeletingObservation &&
+                !isSavingObservation &&
+                !isSegmentingScans ? (
+                  <span className="flex justify-center items-center text-white">Regenerate</span>
+                ) : (
+                  <span className="flex justify-center items-center text-white">{loader()}</span>
+                )}
+              </button>
+              <button
+                disabled={
+                  isRegeneratingConclusion ||
+                  isDeletingObservation ||
+                  radiologistName.trim() === '' ||
+                  isSavingObservation ||
+                  isSegmentingScans
+                }
+                onClick={() => {
+                  handleSaveObservation();
+                }}
+                className={`bg-[#134e4a] text-black p-2 rounded-md w-full md:w-auto font-bold hover:bg-[#0f766e] ${
+                  radiologistName.trim() === '' ? 'cursor-not-allowed' : 'cursor-pointer'
+                }`}
+              >
+                {!isRegeneratingConclusion &&
+                !isDeletingObservation &&
+                !isSavingObservation &&
+                !isSegmentingScans ? (
+                  <span className="flex justify-center items-center text-white">Save</span>
+                ) : (
+                  <span className="flex justify-center items-center text-white">{loader()}</span>
+                )}
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
-    );
-  };
+  );
+};
+
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -1648,7 +1831,7 @@ export default function Home() {
 
   const UploadImageView = () => {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-30">
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-40">
         <div className="w-full max-w-2xl h-[600px] overflow-auto mx-4 bg-[#2e2e2e] rounded-md">
           {/* Header */}
           <div className="flex flex-row justify-between border-b border-[#a1a1aa] p-4">
